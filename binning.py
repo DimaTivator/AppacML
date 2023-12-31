@@ -1,6 +1,11 @@
 from utils import *
 
 
+def is_discrete(array):
+    # we consider a feature to be discrete if it has less than 20 distinct values
+    return len(np.unique(array)) <= 20
+
+
 class EqualLengthBinner:
 
     def __init__(self, array):
@@ -26,6 +31,12 @@ class EqualLengthBinner:
             axis=0
         )
 
-    def get_bin(self, value):
+    def __get_bin(self, value):
         return np.argmax([self.__starts[i] <= value < self.__ends[i] for i in range(self.num_bins + 1)])
+
+    def get_discrete(self):
+        if is_discrete(self.array):
+            return self.array
+
+        return np.array([self.__get_bin(value) for value in self.array])
 
