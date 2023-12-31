@@ -26,7 +26,7 @@ class EqualLengthBinner:
 
         self.__ends = np.concatenate((
             np.linspace(array_min, array_max, self.num_bins),
-            np.array([-INF])
+            np.array([INF])
         ),
             axis=0
         )
