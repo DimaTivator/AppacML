@@ -1,13 +1,21 @@
 class Node:
-    def __init__(self, classes, is_leaf=False):
+    def __init__(
+            self,
+            X,
+            y,
+            depth,
+            sep_feature,
+            sep_value,
+            is_leaf=False
+    ):
         self.is_leaf = is_leaf
-        self.__children = []
-        self.__sep_feature = 0
-        self.__sep_values = []
-        # leafs contain counts of each class in them
-        self.classes_cnt = [0] * classes
+        self.depth = depth
+        self.children = []
+        self.sep_feature = sep_feature
+        self.sep_value = sep_value
+        self.X = X
+        self.y = y
 
 
 if __name__ == "__main__":
     node = Node()
-
