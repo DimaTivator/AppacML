@@ -31,8 +31,16 @@ class EqualLengthBinner:
             axis=0
         )
 
-    def __get_bin(self, value):
-        return np.argmax([self.__starts[i] <= value < self.__ends[i] for i in range(self.num_bins + 1)])
+    def __get_bin(self, value: float) -> float:
+        idx = np.argmax([self.__starts[i] < value <= self.__ends[i] for i in range(self.num_bins + 1)])
+
+        if idx == 0:
+            return self.__ends[idx]
+
+        if idx == len(self.__starts) - 1:
+            return self.__starts[idx]
+
+        return (self.__starts[idx] + self.__ends[idx]) / 2
 
     def get_discrete(self):
         if is_discrete(self.array):
