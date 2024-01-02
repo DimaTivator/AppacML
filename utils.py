@@ -20,3 +20,10 @@ def to_numpy(obj) -> np.array:
 def float_eq(a: float, b: float) -> bool:
     return abs(a - b) < EPS
 
+
+def int_gen():
+    i = 1
+    while True:
+        yield i
+        i += 1
+
