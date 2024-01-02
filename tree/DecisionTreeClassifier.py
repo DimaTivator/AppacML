@@ -1,8 +1,7 @@
-import binning
 from utils import *
 from binning import EqualLengthBinner, is_discrete
-from criterion import *
-import tree
+import criterion as crit
+import tree.tree as tree
 
 
 class DecisionTreeClassifier:
@@ -44,14 +43,67 @@ class DecisionTreeClassifier:
         self.random_state = random_state
 
         self.criterion_dict = {
-            'gini': criterion.gini,
-            'entropy': criterion.entropy
+            'gini': crit.gini,
+            'entropy': crit.entropy
         }
 
     def __is_terminal(self, node: tree.Node):
-        return node.depth == self.max_depth or len(np.unique(node.y)) == 1
+        return (
+                node.depth == self.max_depth or
+                len(np.unique(node.y)) == 1
+        )
 
     def fit(self, X, y):
+
+        id_gen = int_gen()
+
+# ----------------------------------------------------------------------------------
+
+        def build(node: tree.Node):
+            if self.__is_terminal(node):
+                node.is_leaf = True
+                return
+
+            min_score = INF
+            sep_feature_idx = 0
+
+            # best split algorithm
+            for i in range(len(node.X[0])):
+                col = node.X[:, i]
+                s_split = [node.y[float_eq(node.X[:, i], value)] for value in np.unique(col)]
+
+                split_score = sum([self.criterion_dict[self.criterion](s_split[i])
+                                   for i in range(len(s_split))])
+
+                if split_score < min_score:
+                    min_score = split_score
+                    sep_feature_idx = i
+
+            masks = [(float_eq(node.X[:, sep_feature_idx], value), value)
+                     for value in np.unique(node.X[:, sep_feature_idx])]
+            nodes = [tree.Node(
+                node.X[mask],
+                node.y[mask],
+                node.depth + 1,
+                sep_feature_idx,
+                value,
+                is_leaf=True,
+                ID=next(id_gen)
+            )
+                for mask, value in masks]
+
+            node.children = nodes
+            node.is_leaf = False
+            node.sep_feature = sep_feature_idx
+
+            if len(node.children) <= 1:
+                return
+
+            for child in node.children:
+                build(child)
+
+# ----------------------------------------------------------------------------------
+
         X = np.apply_along_axis(
             lambda col: EqualLengthBinner(col).get_discrete(),
             axis=0,
@@ -63,37 +115,5 @@ class DecisionTreeClassifier:
         # TODO
         # use_count = [0] * len(X[0])
 
-        def build(node: tree.Node, depth: int):
-            if self.__is_terminal(node):
-                node.is_leaf = True
-                return
-
-            min_score = INF
-            sep_feature_idx = 0
-
-            # best split algorithm
-            for i in range(len(node.X[0])):
-                col = node.X[:, i]
-                s_split = [node.y[node.X[:, i] == value] for value in np.unique(col)]
-                split_score = sum([self.criterion_dict[criterion](s_split[i])
-                                   for i in range(len(s_split))])
-
-                if split_score < min_score:
-                    min_score = split_score
-                    sep_feature_idx = i
-
-            masks = [(node.X[:, i] == value, value) for value in np.unique(node.X[:, i])]
-            nodes = [tree.Node(
-                node.X[mask],
-                node.y[mask],
-                depth + 1,
-                sep_feature_idx,
-                value
-            )
-                for mask, value in masks]
-
-            node.children = nodes
-
-            for child in node.children:
-                build(child)
-
+        root = tree.Node(X, y, 0, 0, 0)
+        build(root)
