@@ -1,12 +1,12 @@
 import numpy as np
+import pandas as pd
 import math
 
-import pandas as pd
-
 INF = float('inf')
+EPS = 1e-7
 
 
-def to_numpy(obj):
+def to_numpy(obj) -> np.array:
     if type(obj) is pd.DataFrame:
         return obj.values
 
@@ -16,4 +16,7 @@ def to_numpy(obj):
     if type(obj) is list:
         return np.array(obj)
 
+
+def float_eq(a: float, b: float) -> bool:
+    return abs(a - b) < EPS
 
