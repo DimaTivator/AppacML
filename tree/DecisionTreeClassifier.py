@@ -138,7 +138,9 @@ class DecisionTreeClassifier:
             )
                 for mask, value in masks]
 
-            node.children = nodes
+            # remove leaves which contain less than min_samples_leaf samples
+            node.children = list(filter(lambda nd: len(nd.X) >= self.min_samples_leaf, nodes))
+
             node.is_leaf = False
             node.sep_feature = sep_feature_idx
 
@@ -146,7 +148,6 @@ class DecisionTreeClassifier:
                 return
 
             for child in node.children:
-                print(child)
                 build(child)
 
 # ----------------------------------------------------------------------------------
