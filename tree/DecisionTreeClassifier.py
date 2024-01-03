@@ -12,13 +12,17 @@ class DecisionTreeClassifier:
         The function to measure the quality of split
         {'gini', 'entropy'}
 
-        ...
+    splitter: str
+        Split strategy
+        {'best', 'random'}
+
 
     Methods
     -------------
 
-    ...
-
+    fit(X, y)
+        X, y: pandas.DataFrame | pandas.Series | numpy.array | list
+        Builds a decision tree. Building algorithm -- ID3
     """
 
     def __init__(
@@ -46,6 +50,9 @@ class DecisionTreeClassifier:
             'gini': crit.gini,
             'entropy': crit.entropy
         }
+
+        self.random_generator = np.random.RandomState(self.random_state)
+        self.root = None
 
     def __is_terminal(self, node: tree.Node):
         return (
@@ -85,12 +92,20 @@ class DecisionTreeClassifier:
 
             return sep_feature_idx
 
+        def random_split(node: tree.Node) -> int:
+            # min_usage = min(use_count)
+            # features_idx = [i for i in range(len(node.X[0])) if use_count[i] == min_usage]
+
+            features_idx = list(range(len(X[0])))
+
+            return self.random_generator.choice(features_idx)
+
         def build(node: tree.Node):
             if self.__is_terminal(node):
                 node.is_leaf = True
                 return
 
-            sep_feature_idx = best_split(node)
+            sep_feature_idx = split_dict[self.splitter](node)
 
             masks = [(float_eq(node.X[:, sep_feature_idx], value), value)
                      for value in np.unique(node.X[:, sep_feature_idx])]
@@ -113,9 +128,15 @@ class DecisionTreeClassifier:
                 return
 
             for child in node.children:
+                print(child)
                 build(child)
 
 # ----------------------------------------------------------------------------------
+
+        split_dict = {
+            'best': best_split,
+            'random': random_split
+        }
 
         X = np.apply_along_axis(
             lambda col: EqualLengthBinner(col).get_discrete(),
@@ -126,5 +147,5 @@ class DecisionTreeClassifier:
 
         use_count = [0] * len(X[0])
 
-        root = tree.Node(X, y, 0, 0, 0)
-        build(root)
+        self.root = tree.Node(X, y, 0, 0, 0)
+        build(self.root)
