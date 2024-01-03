@@ -8,13 +8,37 @@ class DecisionTreeClassifier:
     """
     Attributes
     -------------
-    criterion: str
+
+    criterion: str, optional (default='entropy')
         The function to measure the quality of split
         {'gini', 'entropy'}
 
-    splitter: str
+    splitter: str, optional (default='best')
         Split strategy
         {'best', 'random'}
+
+    min_samples_split: int, optional (default=2)
+        The minimum number of samples to split a node by a taken feature
+
+    min_samples_leaf: int, optional (default=1)
+        The minimum number of samples required to be at a leaf node
+
+    max_depth: int or None, optional (default=None)
+        The maximum depth of the tree. If it's reached, this branch
+        stops building
+
+    max_features: int, float, str or None, optional (default=None)
+        The number of features to consider when looking for the best split.
+        If None, then consider all features.
+
+    class_weight: dict, list of dict or "balanced", optional (default=None)
+        Weights associated with classes in the form {class_label: weight}.
+        If None, all classes have equal weight. If "balanced", class weights
+        are computed based on the input data.
+
+    random_state: int, RandomState instance or None, optional (default=None)
+        Controls the randomness of the estimator. Pass an int for reproducible
+        results across multiple function calls.
 
 
     Methods
