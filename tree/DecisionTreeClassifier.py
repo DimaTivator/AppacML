@@ -168,3 +168,14 @@ class DecisionTreeClassifier:
 
         self.root = tree.Node(X, y, 0, 0, 0)
         build(self.root)
+
+# ----------------------------------------------------------------------------------
+
+    def print_tree(self):
+
+        def dfs(node: tree.Node):
+            print(node)
+            for child in node.children:
+                dfs(child)
+
+        dfs(self.root)
