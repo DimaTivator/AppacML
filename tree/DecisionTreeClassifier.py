@@ -1,5 +1,5 @@
 from utils import *
-from binning import EqualLengthBinner, is_discrete
+from binning import EqualLengthBinner
 import criterion as crit
 import tree.tree as tree
 
@@ -39,9 +39,9 @@ class DecisionTreeClassifier:
 
         self.criterion = criterion
         self.splitter = splitter
-        self.max_depth = max_depth
         self.min_samples_split = min_samples_split
         self.min_samples_leaf = min_samples_leaf
+        self.max_depth = max_depth
         self.max_features = max_features
         self.class_weight = class_weight
         self.random_state = random_state
@@ -66,10 +66,14 @@ class DecisionTreeClassifier:
 
 # ----------------------------------------------------------------------------------
 
+        def get_split(node: tree.Node, idx: int) -> list:
+            col = node.X[:, idx]
+            return [node.y[float_eq(node.X[:, idx], value)] for value in np.unique(col)]
+
         # returns the index of separating feature
         def best_split(node: tree.Node) -> int:
             min_score = INF
-            sep_feature_idx = 0
+            sep_feature_idx = -1
 
             min_usage = min(use_count)
 
@@ -78,37 +82,51 @@ class DecisionTreeClassifier:
             # best split algorithm
             # iterates through all features that have been used the minimum number of times
             for i in features_idx:
-                col = node.X[:, i]
-                s_split = [node.y[float_eq(node.X[:, i], value)] for value in np.unique(col)]
+                s_split = get_split(node, i)
 
                 split_score = sum([self.criterion_dict[self.criterion](s_split[i])
                                    for i in range(len(s_split))])
 
-                if split_score < min_score:
+                if split_score < min_score and len(s_split) >= self.min_samples_split:
                     min_score = split_score
                     sep_feature_idx = i
 
-            use_count[sep_feature_idx] += 1
+            if sep_feature_idx != -1:
+                use_count[sep_feature_idx] += 1
 
             return sep_feature_idx
 
         def random_split(node: tree.Node) -> int:
+            # # getting the indices of features that can split data
+            # # on more than min_samples_split samples
+            # # and have been used the minimum number of times
             # min_usage = min(use_count)
-            # features_idx = [i for i in range(len(node.X[0])) if use_count[i] == min_usage]
+            # features_idx = []
+            # for i in range(len(node.X[0])):
+            #     s_split = get_split(node, i)
+            #     if len(s_split) >= self.min_samples_split and use_count[i] == min_usage:
+            #         features_idx.append(i)
 
-            features_idx = list(range(len(X[0])))
+            # getting the indices of features that can split data
+            # on more than min_samples_split samples
+            features_idx = []
+            for i in range(len(X[0])):
+                s_split = get_split(node, i)
+                if len(s_split) >= self.min_samples_split:
+                    features_idx.append(i)
 
-            return self.random_generator.choice(features_idx)
+            return self.random_generator.choice(features_idx) if len(features_idx) > 0 else -1
 
         def build(node: tree.Node):
-            if self.__is_terminal(node):
+            sep_feature_idx = split_dict[self.splitter](node)
+
+            if self.__is_terminal(node) or sep_feature_idx == -1:
                 node.is_leaf = True
                 return
 
-            sep_feature_idx = split_dict[self.splitter](node)
-
             masks = [(float_eq(node.X[:, sep_feature_idx], value), value)
                      for value in np.unique(node.X[:, sep_feature_idx])]
+
             nodes = [tree.Node(
                 node.X[mask],
                 node.y[mask],
