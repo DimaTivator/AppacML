@@ -23,7 +23,7 @@ class DecisionTreeClassifier:
 
     def __init__(
             self,
-            criterion='gini',
+            criterion='entropy',
             splitter='best',
             min_samples_split=2,
             min_samples_leaf=1,
@@ -59,16 +59,18 @@ class DecisionTreeClassifier:
 
 # ----------------------------------------------------------------------------------
 
-        def build(node: tree.Node):
-            if self.__is_terminal(node):
-                node.is_leaf = True
-                return
-
+        # returns the index of separating feature
+        def best_split(node: tree.Node) -> int:
             min_score = INF
             sep_feature_idx = 0
 
+            min_usage = min(use_count)
+
+            features_idx = [i for i in range(len(node.X[0])) if use_count[i] == min_usage]
+
             # best split algorithm
-            for i in range(len(node.X[0])):
+            # iterates through all features that have been used the minimum number of times
+            for i in features_idx:
                 col = node.X[:, i]
                 s_split = [node.y[float_eq(node.X[:, i], value)] for value in np.unique(col)]
 
@@ -78,6 +80,17 @@ class DecisionTreeClassifier:
                 if split_score < min_score:
                     min_score = split_score
                     sep_feature_idx = i
+
+            use_count[sep_feature_idx] += 1
+
+            return sep_feature_idx
+
+        def build(node: tree.Node):
+            if self.__is_terminal(node):
+                node.is_leaf = True
+                return
+
+            sep_feature_idx = best_split(node)
 
             masks = [(float_eq(node.X[:, sep_feature_idx], value), value)
                      for value in np.unique(node.X[:, sep_feature_idx])]
@@ -111,9 +124,7 @@ class DecisionTreeClassifier:
         )
         y = to_numpy(y)
 
-        # use_count[i] -- the number of splits by i-th feature
-        # TODO
-        # use_count = [0] * len(X[0])
+        use_count = [0] * len(X[0])
 
         root = tree.Node(X, y, 0, 0, 0)
         build(root)
