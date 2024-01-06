@@ -76,7 +76,7 @@ class DecisionTreeClassifier:
         }
 
         self.random_generator = np.random.RandomState(self.random_state)
-        self.root = None
+        self.__root = None
 
     def __is_terminal(self, node: tree.Node):
         return (
@@ -93,6 +93,19 @@ class DecisionTreeClassifier:
         def get_split(node: tree.Node, idx: int) -> list:
             col = node.X[:, idx]
             return [node.y[float_eq(node.X[:, idx], value)] for value in np.unique(col)]
+
+        def calc_proba(node: tree.Node) -> list:
+            if not node.is_leaf:
+                return []
+
+            n = len(node.y)  # the total number of rows
+            classes = np.unique(node.y)
+            probs = [0] * len(classes)
+
+            for i, c in enumerate(classes):
+                probs[i] = np.count_nonzero(node.y == c) / n
+
+            return probs
 
         # returns the index of separating feature
         def best_split(node: tree.Node) -> int:
@@ -146,6 +159,7 @@ class DecisionTreeClassifier:
 
             if self.__is_terminal(node) or sep_feature_idx == -1:
                 node.is_leaf = True
+                node.probs = calc_proba(node)
                 return
 
             masks = [(float_eq(node.X[:, sep_feature_idx], value), value)
@@ -190,8 +204,8 @@ class DecisionTreeClassifier:
 
         use_count = [0] * len(X[0])
 
-        self.root = tree.Node(X, y, 0, 0, 0)
-        build(self.root)
+        self.__root = tree.Node(X, y, 0, 0, 0)
+        build(self.__root)
 
 # ----------------------------------------------------------------------------------
 
@@ -203,3 +217,4 @@ class DecisionTreeClassifier:
                 dfs(child)
 
         dfs(self.root)
+        dfs(self.__root)

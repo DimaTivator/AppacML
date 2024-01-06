@@ -19,6 +19,7 @@ class Node:
         self.value = value
         self.is_leaf = is_leaf
         self.children = []
+        self.probs = []
         self.__id = ID
 
     @property
