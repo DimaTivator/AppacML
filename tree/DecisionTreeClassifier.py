@@ -1,5 +1,5 @@
-from utils import *
 from binning import EqualLengthBinner
+from utils import *
 import criterion as crit
 import tree.tree as tree
 
@@ -100,18 +100,17 @@ class DecisionTreeClassifier:
             col = node.X[:, idx]
             return [node.y[float_eq(node.X[:, idx], value)] for value in np.unique(col)]
 
-        def calc_proba(node: tree.Node) -> np.array:
-            if not node.is_leaf:
-                return np.array([])
-
+        def calc_probs(node: tree.Node):
             n = len(node.y)  # the total number of rows
-            classes = np.unique(node.y)
-            probs = np.zeros(len(classes))
+            probs = np.zeros(num_classes)
 
-            for i, c in enumerate(classes):
+            for i, c in enumerate(list(range(num_classes))):
                 probs[i] = np.count_nonzero(node.y == c) / n
 
-            return probs
+            node.probs = probs
+
+            for child in node.children:
+                calc_probs(child)
 
         # returns the index of separating feature
         def best_split(node: tree.Node) -> int:
@@ -165,7 +164,6 @@ class DecisionTreeClassifier:
 
             if self.__is_terminal(node) or sep_feature_idx == -1:
                 node.is_leaf = True
-                node.probs = calc_proba(node)
                 return
 
             masks = [(float_eq(node.X[:, sep_feature_idx], value), value)
@@ -189,6 +187,7 @@ class DecisionTreeClassifier:
             node.sep_feature = sep_feature_idx
 
             if len(node.children) <= 1:
+                node.is_leaf = True
                 return
 
             for child in node.children:
@@ -215,10 +214,14 @@ class DecisionTreeClassifier:
 
         y = to_numpy(y)
 
+        num_classes = len(np.unique(y))
+
         use_count = [0] * len(X[0])
 
         self.__root = tree.Node(X, y, 0, 0, 0)
         build(self.__root)
+
+        calc_probs(self.__root)
 
 # ----------------------------------------------------------------------------------
 
