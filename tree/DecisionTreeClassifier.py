@@ -6,6 +6,10 @@ import tree.tree as tree
 
 class DecisionTreeClassifier:
     """
+    ! It is assumed that the class labels are numbered from 0 to n,
+     where n is the total number of classes
+
+
     Attributes
     -------------
 
