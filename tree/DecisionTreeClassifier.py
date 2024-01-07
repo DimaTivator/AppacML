@@ -253,3 +253,6 @@ class DecisionTreeClassifier:
         X = to_numpy(X)
         return np.array([self.__predict_proba_row(row) for row in X])
 
+    def predict(self, X) -> np.array:
+        probs_X = self.predict_proba(X)
+        return np.array([np.argmax(probs) for probs in probs_X])
