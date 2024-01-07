@@ -96,13 +96,13 @@ class DecisionTreeClassifier:
             col = node.X[:, idx]
             return [node.y[float_eq(node.X[:, idx], value)] for value in np.unique(col)]
 
-        def calc_proba(node: tree.Node) -> list:
+        def calc_proba(node: tree.Node) -> np.array:
             if not node.is_leaf:
-                return []
+                return np.array([])
 
             n = len(node.y)  # the total number of rows
             classes = np.unique(node.y)
-            probs = [0] * len(classes)
+            probs = np.zeros(len(classes))
 
             for i, c in enumerate(classes):
                 probs[i] = np.count_nonzero(node.y == c) / n
