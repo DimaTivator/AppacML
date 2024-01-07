@@ -33,5 +33,6 @@ class Node:
                 f'Value {self.value}\n'
                 f'Sep by: feature {self.sep_feature}\n'
                 f'Data: {np.concatenate((self.X, self.y), axis=1)}\n'
+                f'Probs: {self.probs}\n'
                 )
 
