@@ -78,6 +78,8 @@ class DecisionTreeClassifier:
         self.random_generator = np.random.RandomState(self.random_state)
         self.__root = None
 
+        self.__binners = []
+
     def __is_terminal(self, node: tree.Node):
         return (
                 node.depth == self.max_depth or
@@ -195,11 +197,18 @@ class DecisionTreeClassifier:
             'random': random_split
         }
 
+        X = to_numpy(X)
+
+        # TODO: get rid of double initialisation of binner objects ?
+
+        self.__binners = [EqualLengthBinner(col) for col in X.T]
+
         X = np.apply_along_axis(
             lambda col: EqualLengthBinner(col).get_discrete(),
             axis=0,
-            arr=to_numpy(X)
+            arr=X
         )
+
         y = to_numpy(y)
 
         use_count = [0] * len(X[0])
