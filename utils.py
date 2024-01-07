@@ -16,6 +16,8 @@ def to_numpy(obj) -> np.array:
     if type(obj) is list:
         return np.array(obj)
 
+    return obj
+
 
 def float_eq(a: float, b: float) -> bool:
     return abs(a - b) < EPS
