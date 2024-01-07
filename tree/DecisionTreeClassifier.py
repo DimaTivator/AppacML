@@ -232,5 +232,24 @@ class DecisionTreeClassifier:
             for child in node.children:
                 dfs(child)
 
-        dfs(self.root)
         dfs(self.__root)
+
+    def __predict_proba_row(self, row) -> np.array:
+        node = self.__root
+
+        while not node.is_leaf:
+            # getting the discrete value of row[node.sep_feature]
+            sep_feature_bin = self.__binners[node.sep_feature].get_bin(row[node.sep_feature])
+
+            # getting the nearest child (by sep_feature)
+            distances = np.array([child.value - sep_feature_bin for child in node.children])
+            next_idx = np.argmin(distances)
+
+            node = node.children[next_idx]
+
+        return node.probs
+
+    def predict_proba(self, X) -> np.array:
+        X = to_numpy(X)
+        return np.array([self.__predict_proba_row(row) for row in X])
+
