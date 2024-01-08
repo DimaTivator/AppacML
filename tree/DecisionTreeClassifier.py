@@ -212,7 +212,7 @@ class DecisionTreeClassifier:
             arr=X
         )
 
-        y = to_numpy(y)
+        y = to_numpy(y).reshape((-1, 1))
 
         num_classes = len(np.unique(y))
 
