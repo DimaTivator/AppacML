@@ -242,7 +242,7 @@ class DecisionTreeClassifier:
             sep_feature_bin = self.__binners[node.sep_feature].get_bin(row[node.sep_feature])
 
             # getting the nearest child (by sep_feature)
-            distances = np.array([child.value - sep_feature_bin for child in node.children])
+            distances = np.array([abs(child.value - sep_feature_bin) for child in node.children])
             next_idx = np.argmin(distances)
 
             node = node.children[next_idx]
