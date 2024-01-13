@@ -2,9 +2,10 @@ from binning import EqualLengthBinner
 from utils import *
 import criterion as crit
 import tree.tree as tree
+from base.BaseEstimator import BaseEstimator
 
 
-class DecisionTreeClassifier:
+class DecisionTreeClassifier(tree.Tree):
     """
     ! It is assumed that the class labels are numbered from 0 to n,
      where n is the total number of classes
@@ -51,6 +52,12 @@ class DecisionTreeClassifier:
     fit(X, y)
         X, y: pandas.DataFrame | pandas.Series | numpy.array | list
         Builds a decision tree. Building algorithm -- ID3
+
+    predict(X)
+
+    predict_proba(X)
+
+    print_tree()
     """
 
     def __init__(
@@ -62,17 +69,19 @@ class DecisionTreeClassifier:
             max_depth=None,
             max_features=None,
             class_weight=None,
-            random_state=None,
+            random_state=None
     ):
 
-        self.criterion = criterion
-        self.splitter = splitter
-        self.min_samples_split = min_samples_split
-        self.min_samples_leaf = min_samples_leaf
-        self.max_depth = max_depth
-        self.max_features = max_features
-        self.class_weight = class_weight
-        self.random_state = random_state
+        super().__init__(
+            criterion=criterion,
+            splitter=splitter,
+            min_samples_split=min_samples_split,
+            min_samples_leaf=min_samples_leaf,
+            max_depth=max_depth,
+            max_features=max_features,
+            class_weight=class_weight,
+            random_state=random_state
+        )
 
         self.criterion_dict = {
             'gini': crit.gini,
@@ -84,17 +93,17 @@ class DecisionTreeClassifier:
 
         self.__binners = []
 
-    def __is_terminal(self, node: tree.Node):
-        return (
-                node.depth == self.max_depth or
-                len(np.unique(node.y)) == 1
-        )
-
     def fit(self, X, y):
 
         id_gen = int_gen()
 
 # ----------------------------------------------------------------------------------
+
+        def is_terminal(node: tree.Node):
+            return (
+                    node.depth == self.max_depth or
+                    len(np.unique(node.y)) == 1
+            )
 
         def get_split(node: tree.Node, idx: int) -> list:
             col = node.X[:, idx]
@@ -162,7 +171,7 @@ class DecisionTreeClassifier:
         def build(node: tree.Node):
             sep_feature_idx = split_dict[self.splitter](node)
 
-            if self.__is_terminal(node) or sep_feature_idx == -1:
+            if is_terminal(node) or sep_feature_idx == -1:
                 node.is_leaf = True
                 return
 
