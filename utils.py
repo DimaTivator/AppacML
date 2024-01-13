@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 import math
+from tqdm import tqdm
+
 
 INF = float('inf')
 EPS = 1e-7
