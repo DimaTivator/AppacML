@@ -1,8 +1,7 @@
 from binning import EqualLengthBinner
 from utils import *
 import criterion as crit
-import tree.tree as tree
-from base.BaseEstimator import BaseEstimator
+import tree
 
 
 class DecisionTreeClassifier(tree.Tree):

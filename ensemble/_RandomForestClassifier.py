@@ -1,6 +1,6 @@
-from tree.DecisionTreeClassifier import DecisionTreeClassifier
+from tree import DecisionTreeClassifier
 from utils import *
-import tree.tree as tree
+import tree
 
 from sklearn.model_selection import train_test_split
 
