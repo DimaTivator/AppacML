@@ -1,4 +1,6 @@
 from utils import *
+from base.BaseEstimator import BaseEstimator
+from abc import ABC
 
 
 class Node:
@@ -35,4 +37,29 @@ class Node:
                 f'Data: {np.concatenate((self.X, self.y), axis=1)}\n'
                 f'Probs: {self.probs}\n'
                 )
+
+
+class Tree(BaseEstimator, ABC):
+
+    def __init__(
+            self,
+            criterion='entropy',
+            splitter='best',
+            min_samples_split=2,
+            min_samples_leaf=1,
+            max_depth=None,
+            max_features=None,
+            class_weight=None,
+            random_state=None,
+    ):
+
+        self.criterion = criterion
+        self.splitter = splitter
+        self.min_samples_split = min_samples_split
+        self.min_samples_leaf = min_samples_leaf
+        self.max_depth = max_depth
+        self.max_features = max_features
+        self.class_weight = class_weight
+        self.random_state = random_state
+
 
