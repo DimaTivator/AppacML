@@ -7,3 +7,9 @@ were taken from scikit-learn.
 ### tree 
 - DecisionTreeClassifier. Builds a decision tree by ID3 algorithm. Other algorithms will be added later.
 
+### ensemble
+- RandomForestClassifier. Builds n DecisionTreeClassifiers and returns their average predictions  
+
+
+### test
+- Provides a directory for each model with ipynb scripts for testing their performance of popular datasets 
