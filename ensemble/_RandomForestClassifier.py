@@ -8,6 +8,8 @@ from sklearn.model_selection import train_test_split
 class RandomForestClassifier(tree.Tree):
 
     """
+    Builds {n_estimator} DecisionTreeClassifiers(splitter='random')
+    on random sub-samples of a given sample and returns their average predictions
 
     Attributes
     -------------
@@ -19,6 +21,12 @@ class RandomForestClassifier(tree.Tree):
 
     Methods
     -------------
+
+    fit(X, y)
+
+    predict(X)
+
+    predict_proba(X)
 
     """
 
@@ -93,4 +101,8 @@ class RandomForestClassifier(tree.Tree):
     def predict(self, X):
         probs_X = self.predict_proba(X)
         return np.array([np.argmax(probs) for probs in probs_X])
+
+    @property
+    def trees(self):
+        return self.__trees
 
