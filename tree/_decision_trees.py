@@ -1,6 +1,6 @@
 from binning import EqualLengthBinner
 from utils import *
-import criterion as crit
+from metrics import criterion as crit
 import tree
 
 

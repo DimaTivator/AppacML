@@ -1,1 +1,1 @@
-from ._RandomForestClassifier import RandomForestClassifier
+from ._random_forest import RandomForestClassifier

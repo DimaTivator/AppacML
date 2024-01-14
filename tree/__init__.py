@@ -3,4 +3,4 @@ from ._tree import (
     Tree
 )
 
-from ._DecisionTreeClassifier import DecisionTreeClassifier
+from ._decision_trees import DecisionTreeClassifier
