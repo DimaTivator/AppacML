@@ -1,8 +1,6 @@
 import unittest
 import numpy as np
-from preprocessing import (
-    train_test_split
-)
+from preprocessing import train_test_split
 
 
 class TestTrainTestSplit(unittest.TestCase):
@@ -13,20 +11,24 @@ class TestTrainTestSplit(unittest.TestCase):
         self.X = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]])
         self.y = np.array([[0], [1], [0], [1]])
 
+    def assert_shapes(self, X_train, X_test, y_train, y_test, expected_train_rows, expected_test_rows):
+        self.assertEqual(X_train.shape[0], expected_train_rows)
+        self.assertEqual(X_train.shape[1], self.X.shape[1])
+        self.assertEqual(X_test.shape[0], expected_test_rows)
+        self.assertEqual(X_test.shape[1], self.X.shape[1])
+        self.assertEqual(y_train.shape[0], expected_train_rows)
+        self.assertEqual(y_train.shape[1], self.y.shape[1])
+        self.assertEqual(y_test.shape[0], expected_test_rows)
+        self.assertEqual(y_test.shape[1], self.y.shape[1])
+
     def test_train_test_split_default(self):
         X_train, X_test, y_train, y_test = train_test_split(self.X, self.y)
-        self.assertEqual(X_train.shape[0], 3)
-        self.assertEqual(X_test.shape[0], 1)
-        self.assertEqual(y_train.shape[0], 3)
-        self.assertEqual(y_test.shape[0], 1)
+        self.assert_shapes(X_train, X_test, y_train, y_test, expected_train_rows=3, expected_test_rows=1)
 
     def test_train_test_split_custom_test_size(self):
         test_size = 0.3
         X_train, X_test, y_train, y_test = train_test_split(self.X, self.y, test_size=test_size)
-        self.assertEqual(X_train.shape[0], 2)
-        self.assertEqual(X_test.shape[0], 2)
-        self.assertEqual(y_train.shape[0], 2)
-        self.assertEqual(y_test.shape[0], 2)
+        self.assert_shapes(X_train, X_test, y_train, y_test, expected_train_rows=2, expected_test_rows=2)
 
     def test_train_test_split_random_state(self):
         random_state = 10
