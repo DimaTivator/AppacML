@@ -1,4 +1,4 @@
-from binning import EqualLengthBinner
+from preprocessing import EqualLengthBinner
 from utils import *
 from metrics import criterion as crit
 import tree
@@ -49,7 +49,7 @@ class DecisionTreeClassifier(tree.Tree):
     -------------
 
     fit(X, y)
-        X, y: pandas.DataFrame | pandas.Series | numpy.array | list
+        X, y: pandas.DataFrame | pandas.Series | numpy.ndarray | list
         Builds a decision tree. Building algorithm -- ID3
 
     predict(X)
@@ -242,7 +242,7 @@ class DecisionTreeClassifier(tree.Tree):
 
         dfs(self.__root)
 
-    def __predict_proba_row(self, row) -> np.array:
+    def __predict_proba_row(self, row) -> np.ndarray:
         node = self.__root
 
         while not node.is_leaf:
@@ -257,10 +257,10 @@ class DecisionTreeClassifier(tree.Tree):
 
         return node.probs
 
-    def predict_proba(self, X) -> np.array:
+    def predict_proba(self, X) -> np.ndarray:
         X = to_numpy(X)
         return np.array([self.__predict_proba_row(row) for row in X])
 
-    def predict(self, X) -> np.array:
+    def predict(self, X) -> np.ndarray:
         probs_X = self.predict_proba(X)
         return np.array([np.argmax(probs) for probs in probs_X])

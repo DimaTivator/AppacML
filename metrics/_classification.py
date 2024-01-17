@@ -2,7 +2,7 @@ import numpy as np
 from _exceptions import ArgumentsShapeException
 
 
-def accuracy_score(y_true: np.array, y_pred: np.array) -> float:
+def accuracy_score(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     if y_true.shape != y_pred.shape:
         raise ArgumentsShapeException(f"y_true shape {y_true.shape} doesn't match y_pred shape {y_pred.shape}")
 
