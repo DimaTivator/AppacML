@@ -17,3 +17,10 @@ def precision_score(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     true_positives = np.sum(y_true * y_pred)    # the number of cases where 1 was correctly predicted
     false_positives = np.sum(~y_true * y_pred)  # the number of cases where 1 was incorrectly predicted
     return true_positives / (true_positives + false_positives)
+
+
+# What part of relevant items is retrieved?
+def recall_score(y_true: np.ndarray, y_pred: np.ndarray) -> float:
+    true_positive = np.sum(y_true * y_pred)  # the number of cases where 1 was correctly predicted
+    all_positive = np.sum(y_true)
+    return true_positive / all_positive
