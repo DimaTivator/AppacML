@@ -28,7 +28,7 @@ def train_test_split(X: np.ndarray, y: np.ndarray, test_size=0.2, random_state=N
 
     data_train, data_test = data[train_indices], data[test_indices]
 
-    sep = X.shape[1] - y.shape[1]
+    sep = X.shape[1]
 
     X_train, X_test = data_train[:, :sep], data_test[:, :sep]
     y_train, y_test = data_train[:, sep:], data_test[:, sep:]
