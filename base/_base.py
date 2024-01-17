@@ -1,5 +1,16 @@
 import inspect
+import metrics
 from abc import ABC, abstractmethod
+from typing import Callable
+from types import ModuleType
+import numpy as np
+
+
+def get_functions_by_substring(package: ModuleType, substring: str):
+    function_names = [name for name in dir(package) if callable(getattr(package, name))]
+    substring_functions = [func_name for func_name in function_names if substring in func_name.lower()]
+    substring_functions_dict = {func_name: getattr(metrics, func_name) for func_name in substring_functions}
+    return substring_functions_dict
 
 
 class BaseEstimator(ABC):
@@ -60,3 +71,41 @@ class BaseEstimator(ABC):
     def predict_proba(self, X):
         pass
 
+
+class BaseSearch(BaseEstimator, ABC):
+
+    # decorator to make all children implement __init__ method
+    @abstractmethod
+    def __init__(
+            self,
+            estimator: BaseEstimator,
+            scoring: str | Callable[[np.ndarray, np.ndarray], float] = None,
+    ):
+        self.estimator = estimator
+        self.scoring = scoring
+
+        self.scoring_functions = get_functions_by_substring(metrics, 'score')
+
+        self._best_estimator = None
+        self._best_score = None
+        self._best_params = None
+
+    @property
+    def best_estimator(self):
+        return self._best_estimator
+
+    @property
+    def best_score(self):
+        return self._best_score
+
+    @property
+    def best_params(self):
+        return self._best_params
+
+    def score(self, X, y) -> float:
+        # TODO implement
+        pass
+
+    @abstractmethod
+    def fit(self, X, y):
+        pass
