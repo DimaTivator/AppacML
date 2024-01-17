@@ -1,5 +1,5 @@
 from utils import *
-from base.BaseEstimator import BaseEstimator
+from base import BaseEstimator
 from abc import ABC
 
 
