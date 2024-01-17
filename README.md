@@ -11,7 +11,7 @@ were taken from scikit-learn.
 - RandomForestClassifier. Builds n DecisionTreeClassifiers and returns their average predictions
 
 ### datasets
-- Provides a few datasets downloaded from opened sources and simple preprocessing functions for each dataset
+- Provides a few datasets, downloaded from opened sources, and simple preprocessing functions for each dataset
 
 ### linear_models
 
