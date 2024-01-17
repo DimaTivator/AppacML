@@ -9,7 +9,3 @@ were taken from scikit-learn.
 
 ### ensemble
 - RandomForestClassifier. Builds n DecisionTreeClassifiers and returns their average predictions  
-
-
-### test
-- Provides a directory for each model with ipynb scripts for testing their performance of popular datasets 
