@@ -2,7 +2,7 @@ from tree import DecisionTreeClassifier
 from utils import *
 import tree
 
-from sklearn.model_selection import train_test_split
+from preprocessing import train_test_split
 
 
 class RandomForestClassifier(tree.Tree):
@@ -69,7 +69,6 @@ class RandomForestClassifier(tree.Tree):
 
         for _ in tqdm(range(self.n_estimators)):
 
-            # TODO replace sklearn function with mine
             X_train, _, y_train, _ = train_test_split(
                 X, y,
                 test_size=0.7,
