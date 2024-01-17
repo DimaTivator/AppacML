@@ -30,6 +30,24 @@ class BaseEstimator(ABC):
         attribute_names = self._get_init_attributes_names()
         return {name: getattr(self, name) for name in attribute_names}
 
+    def set_params(self, new_params):
+
+        """
+        Set the values of the estimator's parameters based on the input dictionary.
+
+        Parameters:
+            new_params (dict): Dictionary containing new parameter values.
+
+        Raises:
+            ValueError: If a parameter key does not correspond to an existing attribute in the class.
+        """
+
+        for key, value in new_params.items():
+            if hasattr(self, key):
+                setattr(self, key, value)
+            else:
+                raise ValueError(f'Estimator has no attribute named {key}')
+
     @abstractmethod
     def fit(self, X, y):
         pass
