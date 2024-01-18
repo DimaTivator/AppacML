@@ -69,3 +69,7 @@ def roc_auc_score(y_true: np.ndarray, y_pred: np.ndarray) -> float:
 
     score = pairs / (cur_neg * (n - cur_neg))
     return score
+
+
+def gini_score(y_true: np.ndarray, y_pred: np) -> float:
+    return 2 * roc_auc_score(y_true, y_pred) - 1
