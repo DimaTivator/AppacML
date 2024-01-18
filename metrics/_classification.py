@@ -29,7 +29,7 @@ def f1_score(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     return 2 * (precision * recall) / (precision + recall)
 
 
-def roc_auc_score(y_true: np.ndarray, y_pred: np.ndarray) -> float:
+def roc_auc_score(y_true: np.ndarray, y_prob: np.ndarray) -> float:
     """
     Calculate the Receiver Operating Characteristic Area Under the Curve (ROC AUC) score.
 
@@ -54,11 +54,11 @@ def roc_auc_score(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     """
 
     # if all predictions are the same, we assume that they are random
-    if np.all(np.abs(y_pred - y_pred[0]) < EPS):
+    if np.all(np.abs(y_prob - y_prob[0]) < EPS):
         return 0.5
 
     # Sort y_true based on the corresponding y_pred values
-    y_true = y_true[np.argsort(y_pred)]
+    y_true = y_true[np.argsort(y_prob)]
 
     n = len(y_true)
     cur_neg = 0
