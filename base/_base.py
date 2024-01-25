@@ -66,14 +66,6 @@ class BaseEstimator(ABC):
     def fit(self, X, y):
         pass
 
-    @abstractmethod
-    def predict(self, X):
-        pass
-
-    @abstractmethod
-    def predict_proba(self, X):
-        pass
-
 
 class BaseSearch(BaseEstimator, ABC):
 
