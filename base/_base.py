@@ -65,7 +65,10 @@ class BaseEstimator(ABC):
             else:
                 raise ValueError(f'Estimator has no attribute named {key}')
 
-    def reorder_columns(self, df: pd.DataFrame) -> pd.DataFrame:
+    def reorder_columns(self, df):
+        if not isinstance(df, pd.DataFrame):
+            return df
+
         if set(df.columns) != set(self.features):
             raise ValueError('The estimator was fitted on other features')
 

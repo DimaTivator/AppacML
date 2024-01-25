@@ -211,6 +211,10 @@ class DecisionTreeClassifier(tree.Tree):
             'random': random_split
         }
 
+        # save the order of columns to reorder them in predict method
+        if isinstance(X, pd.DataFrame):
+            self.features = X.columns
+
         X = to_numpy(X)
 
         # TODO: get rid of double initialisation of binner objects ?
@@ -261,6 +265,7 @@ class DecisionTreeClassifier(tree.Tree):
         return node.probs
 
     def predict_proba(self, X: pd.DataFrame | pd.Series | np.ndarray) -> np.ndarray:
+        X = self.reorder_columns(X)
         X = to_numpy(X)
         return np.array([self.__predict_proba_row(row) for row in X])
 
