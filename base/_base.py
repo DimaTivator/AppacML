@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 from typing import Callable
 from types import ModuleType
 import numpy as np
+import pandas as pd
 
 
 def get_functions_by_substring(package: ModuleType, substring: str):
@@ -61,6 +62,13 @@ class BaseEstimator(ABC):
                 setattr(self, key, value)
             else:
                 raise ValueError(f'Estimator has no attribute named {key}')
+
+    def reorder_columns(self, df: pd.DataFrame) -> pd.DataFrame:
+        if set(df.columns) != set(self.features):
+            raise ValueError('The estimator was fitted on other features')
+
+        reordered_df = df[self.features].copy()
+        return reordered_df
 
     @abstractmethod
     def fit(self, X, y):
