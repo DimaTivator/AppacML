@@ -16,6 +16,8 @@ def get_functions_by_substring(package: ModuleType, substring: str):
 
 class BaseEstimator(ABC):
 
+    # decorator to make all children implement __init__ method
+    @abstractmethod
     def __init__(self):
         self.features = []
 
@@ -77,7 +79,6 @@ class BaseEstimator(ABC):
 
 class BaseSearch(BaseEstimator, ABC):
 
-    # decorator to make all children implement __init__ method
     @abstractmethod
     def __init__(
             self,
