@@ -8,8 +8,7 @@ from preprocessing import train_test_split
 class RandomForestClassifier(tree.Tree):
 
     """
-    Builds {n_estimator} DecisionTreeClassifiers(splitter='random')
-    on random sub-samples of a given sample and returns their average predictions
+    TODO: add docs
 
     Attributes
     -------------
@@ -34,6 +33,7 @@ class RandomForestClassifier(tree.Tree):
             self,
             n_estimators=100,
             criterion='entropy',
+            splitter='best',
             min_samples_split=2,
             min_samples_leaf=1,
             max_depth=None,
@@ -44,6 +44,7 @@ class RandomForestClassifier(tree.Tree):
 
         super().__init__(
             criterion=criterion,
+            splitter=splitter,
             min_samples_split=min_samples_split,
             min_samples_leaf=min_samples_leaf,
             max_depth=max_depth,
@@ -53,7 +54,6 @@ class RandomForestClassifier(tree.Tree):
         )
 
         self.n_estimators = n_estimators
-        self.__splitter = 'random'
 
         # the array with decision trees
         self.__trees = []
@@ -77,7 +77,7 @@ class RandomForestClassifier(tree.Tree):
 
             model = DecisionTreeClassifier(
                 criterion=self.criterion,
-                splitter=self.__splitter,
+                splitter=self.splitter,
                 min_samples_split=self.min_samples_split,
                 min_samples_leaf=self.min_samples_leaf,
                 max_depth=self.max_depth,
