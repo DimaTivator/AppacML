@@ -15,6 +15,9 @@ def get_functions_by_substring(package: ModuleType, substring: str):
 
 class BaseEstimator(ABC):
 
+    def __init__(self):
+        self.features = []
+
     @classmethod
     def _get_init_attributes_names(cls):
 
@@ -81,6 +84,8 @@ class BaseSearch(BaseEstimator, ABC):
             estimator: BaseEstimator,
             scoring: str | Callable[[np.ndarray, np.ndarray], float] = None,
     ):
+        super().__init__()
+
         self.estimator = estimator
         self.scoring = scoring
 

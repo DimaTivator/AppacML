@@ -52,6 +52,7 @@ class Tree(BaseEstimator, ABC):
             class_weight=None,
             random_state=None,
     ):
+        super().__init__()
 
         self.criterion = criterion
         self.splitter = splitter

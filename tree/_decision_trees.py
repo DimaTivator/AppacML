@@ -92,7 +92,6 @@ class DecisionTreeClassifier(tree.Tree):
 
         self.__binners = []
 
-    def fit(self, X, y):
     def fit(self,
             X: pd.DataFrame | pd.Series | np.ndarray,
             y: pd.DataFrame | pd.Series | np.ndarray
