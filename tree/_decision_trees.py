@@ -93,6 +93,10 @@ class DecisionTreeClassifier(tree.Tree):
         self.__binners = []
 
     def fit(self, X, y):
+    def fit(self,
+            X: pd.DataFrame | pd.Series | np.ndarray,
+            y: pd.DataFrame | pd.Series | np.ndarray
+            ):
 
         id_gen = int_gen()
 
@@ -242,7 +246,7 @@ class DecisionTreeClassifier(tree.Tree):
 
         dfs(self.__root)
 
-    def __predict_proba_row(self, row) -> np.ndarray:
+    def __predict_proba_row(self, row: np.ndarray) -> np.ndarray:
         node = self.__root
 
         while not node.is_leaf:
@@ -257,10 +261,10 @@ class DecisionTreeClassifier(tree.Tree):
 
         return node.probs
 
-    def predict_proba(self, X) -> np.ndarray:
+    def predict_proba(self, X: pd.DataFrame | pd.Series | np.ndarray) -> np.ndarray:
         X = to_numpy(X)
         return np.array([self.__predict_proba_row(row) for row in X])
 
-    def predict(self, X) -> np.ndarray:
+    def predict(self, X: pd.DataFrame | pd.Series | np.ndarray) -> np.ndarray:
         probs_X = self.predict_proba(X)
         return np.array([np.argmax(probs) for probs in probs_X])
