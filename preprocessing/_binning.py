@@ -1,4 +1,4 @@
-from utils import *
+from utils.utils import *
 
 
 def is_discrete(array: np.ndarray):

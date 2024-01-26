@@ -1,5 +1,5 @@
 from tree import DecisionTreeClassifier
-from utils import *
+from utils.utils import *
 import tree
 
 from preprocessing import train_test_split

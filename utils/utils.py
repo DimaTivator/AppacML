@@ -30,4 +30,3 @@ def int_gen():
     while True:
         yield i
         i += 1
-

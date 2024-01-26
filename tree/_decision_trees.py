@@ -1,5 +1,5 @@
 from preprocessing import EqualLengthBinner
-from utils import *
+from utils.utils import *
 from metrics import criterion as crit
 import tree
 

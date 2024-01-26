@@ -1,5 +1,4 @@
-import numpy as np
-from utils import *
+from utils.utils import *
 
 
 def accuracy_score(y_true: np.ndarray, y_pred: np.ndarray) -> float:
@@ -16,7 +15,7 @@ def precision_score(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     return true_positives / (true_positives + false_positives)
 
 
-# What part of relevant items is retrieved?
+# What part of relevant items is retrieved
 def recall_score(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     true_positive = np.sum(y_true * y_pred)  # the number of cases where 1 was correctly predicted
     all_positive = np.sum(y_true)

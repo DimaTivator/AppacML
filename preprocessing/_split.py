@@ -1,4 +1,4 @@
-from utils import *
+from utils.utils import *
 
 
 def unite(X: np.ndarray, y: np.ndarray) -> np.ndarray:
