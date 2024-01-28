@@ -71,8 +71,7 @@ class RandomForestClassifier(tree.Tree):
 
             X_train, _, y_train, _ = train_test_split(
                 X, y,
-                test_size=0.7,
-                random_state=self.random_generator.randint(0, 1000)
+                test_size=0.7
             )
 
             model = DecisionTreeClassifier(

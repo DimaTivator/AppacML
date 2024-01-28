@@ -264,8 +264,8 @@ class DecisionTreeClassifier(tree.Tree):
 
         return node.probs
 
-    def predict_proba(self, X: pd.DataFrame | pd.Series | np.ndarray) -> np.ndarray:
-        X = self.reorder_columns(X)
+    def predict_proba(self, X) -> np.ndarray:
+        # X = self.reorder_columns(X)
         X = to_numpy(X)
         return np.array([self.__predict_proba_row(row) for row in X])
 
