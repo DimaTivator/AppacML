@@ -67,12 +67,24 @@ class RandomForestClassifier(tree.Tree):
         X = to_numpy(X)
         y = to_numpy(y)
 
+        num_cols = X.shape[1] if len(X.shape) > 1 else X.shape[0]
+
         for _ in tqdm(range(self.n_estimators)):
 
             X_train, _, y_train, _ = train_test_split(
                 X, y,
                 test_size=0.7
             )
+
+            cols = self.random_generator.choice(
+                np.arange(num_cols),
+                size=self.random_generator.randint(int(num_cols * 0.7), num_cols),
+                replace=False
+            )
+
+            X_train = X_train[:, cols]
+
+            self.features.append(cols)
 
             model = DecisionTreeClassifier(
                 criterion=self.criterion,
@@ -89,9 +101,10 @@ class RandomForestClassifier(tree.Tree):
             self.__trees.append(model)
 
     def predict_proba(self, X):
+        X = to_numpy(X)
         probs_sum = np.zeros(shape=(len(X), self.__num_classes))
-        for model in self.__trees:
-            probs = model.predict_proba(X)
+        for i, model in enumerate(self.__trees):
+            probs = model.predict_proba(X[:, self.features[i]])
             probs_sum += probs
 
         return probs_sum / self.n_estimators
